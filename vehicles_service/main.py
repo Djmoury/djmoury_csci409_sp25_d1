@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends
 import httpx
+from auth import get_current_user
 
 API_KEY = "ff227ff12fca4c059e83f728c8a7f7fb"  
 ENDPOINT_URL = "https://api-v3.mbta.com" 
@@ -23,6 +24,7 @@ async def get_all_vehicles(route: str = None, revenue: bool = None):
 async def read_vehicles(
     route: str = None, 
     revenue: bool = None, 
-    vehicles=Depends(get_all_vehicles)
+    vehicles=Depends(get_all_vehicles),
+    user: dict = Depends(get_current_user)
 ):
-    return vehicles
+    return {"user": user, "vehicles": vehicles}

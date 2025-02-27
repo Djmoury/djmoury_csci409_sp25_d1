@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends
 import httpx
+from auth import get_current_user
 
 API_KEY = "ff227ff12fca4c059e83f728c8a7f7fb" 
 ENDPOINT_URL = "https://api-v3.mbta.com"
@@ -23,7 +24,8 @@ async def get_all_alerts(route: str = None, stop: str = None):
 async def read_alerts(
     route: str = None, 
     stop: str = None, 
-    alerts=Depends(get_all_alerts)
+    alerts=Depends(get_all_alerts),
+    user: dict = Depends(get_current_user)
 ):
-    return alerts
+    return {"user" : user, "alerts": alerts}
 
